@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StyleSense AI – Personal Virtual Stylist</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#221B33;--berry:#B0306A;--berry-d:#8A2352;--mist:#F5F3F8;--sage:#5E8B7E;--gold:#C9A24B;--line:#DDD8E6}
+body{font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);background:#fff;line-height:1.6}
+h1,h2,h3,.brand{font-family:'Bodoni Moda',Georgia,serif;font-weight:700;letter-spacing:-.01em}
+.navbar{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line)}
+.brand{font-size:1.4rem;color:var(--ink)!important}
+.brand span{color:var(--berry)}
+.nav-link{color:var(--ink);font-weight:500}
+.nav-link:hover{color:var(--berry)}
+.btn-berry{background:var(--berry);color:#fff;border:0;font-weight:500;padding:.65rem 1.4rem;border-radius:.4rem}
+.btn-berry:hover,.btn-berry:focus{background:var(--berry-d);color:#fff}
+.btn-line{border:1.5px solid var(--ink);color:var(--ink);font-weight:500;border-radius:.4rem}
+.btn-line:hover{background:var(--ink);color:#fff}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.hero{background:var(--mist);padding:3.5rem 0 4rem}
+.hero h1{font-size:clamp(2.2rem,5.5vw,3.9rem);line-height:1.08}
+.lead-s{max-width:34rem;font-size:1.1rem}
+.studio{background:#fff;border:1px solid var(--line);border-radius:.75rem;padding:1.5rem;box-shadow:0 18px 40px -22px rgba(34,27,51,.35)}
+.studio h2{font-size:1.35rem}
+.form-label{font-weight:500;font-size:.9rem;margin-bottom:.25rem}
+.form-select,.form-control{border-color:var(--line)}
+.swatches{display:flex;gap:.6rem;flex-wrap:wrap}
+.swatches input{position:absolute;opacity:0}
+.swatches label{width:2.4rem;height:2.4rem;border-radius:50%;cursor:pointer;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.swatches input:checked+label{box-shadow:0 0 0 3px var(--berry)}
+.swatches input:focus-visible+label{outline:3px solid var(--gold);outline-offset:2px}
+section{scroll-margin-top:70px}
+.sec{padding:4.5rem 0}
+.sec h2{font-size:clamp(1.7rem,3.5vw,2.5rem)}
+.outfit{border:1px solid var(--line);border-radius:.75rem;overflow:hidden;background:#fff;height:100%;display:flex;flex-direction:column}
+.outfit-top{display:flex;height:96px}
+.outfit-top div{flex:1}
+.outfit-body{padding:1.1rem;flex:1}
+.outfit-body ul{padding-left:1.1rem;margin:.5rem 0}
+.tag{display:inline-block;font-size:.8rem;background:var(--mist);border-radius:2rem;padding:.1rem .7rem;margin:0 .3rem .3rem 0}
+.heart{border:0;background:none;font-size:1.5rem;line-height:1;color:var(--berry)}
+.feat{border-top:3px solid var(--ink);padding-top:1rem;height:100%}
+.feat:nth-child(3n+2) .x{color:var(--sage)}
+.step{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--line)}
+.step b{font-family:'Bodoni Moda',serif;font-size:1.8rem;color:var(--berry);min-width:2.2rem}
+.dark{background:var(--ink);color:#fff}
+.dark .tag{background:rgba(255,255,255,.12);color:#fff}
+.nav-tabs .nav-link{color:var(--ink)}
+.nav-tabs .nav-link.active{border-bottom:3px solid var(--berry);font-weight:700}
+.weather-badge{font-size:.85rem;color:var(--sage);font-weight:500}
+footer{background:var(--ink);color:#cfc9de;padding:2rem 0;font-size:.9rem}
+@media (prefers-reduced-motion:no-preference){.outfit{transition:transform .2s}.outfit:hover{transform:translateY(-3px)}}
+@media (max-width:575px){.hero{padding:2.2rem 0 2.5rem}.sec{padding:3rem 0}}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container">
+    <a class="navbar-brand brand" href="#">Style<span>Sense</span> AI</a>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav" aria-label="Toggle menu"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+        <li class="nav-item"><a class="nav-link" href="#stylist">Stylist</a></li>
+        <li class="nav-item"><a class="nav-link" href="#closet">My Closet</a></li>
+        <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+        <li class="nav-item"><a class="nav-link" href="#how">How it works</a></li>
+        <li class="nav-item"><a class="nav-link" href="#future">Coming soon</a></li>
+        <li class="nav-item ms-lg-2"><button class="btn btn-line btn-sm px-3" id="authBtn" data-bs-toggle="modal" data-bs-target="#loginModal">Log in</button></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO + STYLIST -->
+<header class="hero" id="stylist">
+  <div class="container">
+    <div class="row align-items-center g-4 g-lg-5">
+      <div class="col-lg-6">
+        <h1>Know what to wear before you open the wardrobe.</h1>
+        <p class="lead-s mt-3">StyleSense AI builds complete outfits from your body type, skin tone, the occasion and today's weather, so you spend less time deciding and more time looking good.</p>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+          <a href="#studio" class="btn btn-berry">Style me now</a>
+          <a href="#how" class="btn btn-line">See how it works</a>
+        </div>
+      </div>
+      <div class="col-lg-6" id="studio">
+        <form class="studio" id="styleForm">
+          <h2 class="mb-3">Tell us about you</h2>
+          <div class="row g-3">
+            <div class="col-6 col-md-4"><label class="form-label" for="age">Age</label><input class="form-control" type="number" id="age" min="10" max="90" value="20"></div>
+            <div class="col-6 col-md-4"><label class="form-label" for="gender">Gender</label>
+              <select class="form-select" id="gender"><option>Female</option><option>Male</option><option>Non-binary</option></select></div>
+            <div class="col-12 col-md-4"><label class="form-label" for="body">Body type</label>
+              <select class="form-select" id="body"><option>Pear</option><option>Apple</option><option>Hourglass</option><option>Rectangle</option><option>Athletic</option></select></div>
+            <div class="col-12"><span class="form-label d-block">Skin tone</span>
+              <div class="swatches" role="radiogroup" aria-label="Skin tone" id="tones"></div></div>
+            <div class="col-6"><label class="form-label" for="occasion">Occasion</label>
+              <select class="form-select" id="occasion"><option>College</option><option>Interview</option><option>Party</option><option>Wedding</option><option>Casual outing</option></select></div>
+            <div class="col-6"><label class="form-label" for="weather">Weather</label>
+              <select class="form-select" id="weather"><option value="hot">Hot</option><option value="mild">Mild</option><option value="cold">Cold</option><option value="rain">Rainy</option></select></div>
+            <div class="col-12"><label class="form-label" for="style">Style preference</label>
+              <select class="form-select" id="style"><option>Classic</option><option>Trendy</option><option>Minimal</option><option>Ethnic fusion</option></select></div>
+            <div class="col-12 d-flex gap-2 flex-wrap">
+              <button class="btn btn-berry flex-grow-1" type="submit">Get my outfits</button>
+              <button class="btn btn-line" type="button" id="saveProfile">Save as my profile</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- RESULTS -->
+<section class="sec" id="results" hidden>
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-end mb-4 gap-2">
+      <div><h2 id="resTitle">Your outfits</h2><p class="mb-0 text-secondary" id="resSub"></p></div>
+      <span class="weather-badge" id="trend"></span>
+    </div>
+    <div class="row g-4" id="outfitGrid"></div>
+  </div>
+</section>
+
+<!-- CLOSET -->
+<section class="sec" id="closet" style="background:var(--mist)">
+  <div class="container">
+    <h2 class="mb-4">My closet</h2>
+    <ul class="nav nav-tabs mb-4" role="tablist">
+      <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabFav">Favorites <span class="badge text-bg-secondary" id="favCount">0</span></button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabWard">Wardrobe</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabWish">Wishlist</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabProf">Edit profile</button></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="tabFav"><div class="row g-3" id="favGrid"></div></div>
+      <div class="tab-pane fade" id="tabWard">
+        <form class="row g-2 mb-3" id="wardForm">
+          <div class="col-12 col-md-5"><label class="visually-hidden" for="wItem">Clothing item</label><input class="form-control" id="wItem" placeholder="e.g. Navy blazer" required></div>
+          <div class="col-7 col-md-4"><label class="visually-hidden" for="wType">Category</label><select class="form-select" id="wType"><option>Top</option><option>Bottom</option><option>Outerwear</option><option>Footwear</option><option>Accessory</option></select></div>
+          <div class="col-5 col-md-3"><button class="btn btn-berry w-100">Add item</button></div>
+        </form>
+        <ul class="list-group" id="wardList"></ul>
+      </div>
+      <div class="tab-pane fade" id="tabWish">
+        <form class="row g-2 mb-3" id="wishForm">
+          <div class="col-8 col-md-9"><label class="visually-hidden" for="wishItem">Wishlist item</label><input class="form-control" id="wishItem" placeholder="Something you want to buy" required></div>
+          <div class="col-4 col-md-3"><button class="btn btn-berry w-100">Add</button></div>
+        </form>
+        <ul class="list-group" id="wishList"></ul>
+      </div>
+      <div class="tab-pane fade" id="tabProf">
+        <div class="row"><div class="col-lg-7">
+          <p>Change your details or fashion preferences any time. New outfits use your latest profile.</p>
+          <form class="row g-3" id="profForm">
+            <div class="col-md-6"><label class="form-label" for="pName">Name</label><input class="form-control" id="pName"></div>
+            <div class="col-md-6"><label class="form-label" for="pBudget">Budget per outfit</label>
+              <select class="form-select" id="pBudget"><option>Under ₹1,500</option><option>₹1,500 – ₹3,500</option><option>₹3,500+</option></select></div>
+            <div class="col-12"><label class="form-label" for="pFav">Favorite colors</label><input class="form-control" id="pFav" placeholder="e.g. Olive, black, mustard"></div>
+            <div class="col-12"><button class="btn btn-berry">Save changes</button> <span class="text-success ms-2" id="profMsg" role="status"></span></div>
+          </form>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec" id="features">
+  <div class="container">
+    <h2 class="mb-4">Everything a stylist does, minus the fee</h2>
+    <div class="row g-4" id="featGrid"></div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="sec dark" id="how">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4"><h2>From profile to outfit in six steps</h2><p class="mt-3">Built for students, working professionals, fashion lovers and online stores alike.</p>
+        <span class="tag">Students</span><span class="tag">Professionals</span><span class="tag">Fashion fans</span><span class="tag">Online stores</span><span class="tag">Personal shoppers</span></div>
+      <div class="col-lg-8" id="steps"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FUTURE -->
+<section class="sec" id="future">
+  <div class="container">
+    <h2 class="mb-4">What's next</h2>
+    <div class="d-flex flex-wrap gap-2" id="futureTags"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container d-flex flex-column flex-md-row justify-content-between gap-2">
+    <span><strong class="text-white">StyleSense AI</strong> – an AI-based personal virtual stylist.</span>
+    <span>Project by Swati Kumari · SY BCA · Roll No. 01</span>
+  </div>
+</footer>
+
+<!-- LOGIN MODAL -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-4" id="loginTitle">Welcome to StyleSense</h2>
+        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="modal-body" id="loginForm">
+        <ul class="nav nav-pills mb-3" id="authMode">
+          <li class="nav-item"><button type="button" class="nav-link active" data-mode="login">Log in</button></li>
+          <li class="nav-item"><button type="button" class="nav-link" data-mode="register">Register</button></li>
+        </ul>
+        <div class="mb-3 d-none" id="nameRow"><label class="form-label" for="lName">Full name</label><input class="form-control" id="lName"></div>
+        <div class="mb-3"><label class="form-label" for="lEmail">Email</label><input class="form-control" type="email" id="lEmail" required></div>
+        <div class="mb-3"><label class="form-label" for="lPass">Password</label><input class="form-control" type="password" id="lPass" minlength="6" required></div>
+        <button class="btn btn-berry w-100" id="authSubmit">Log in</button>
+        <p class="small text-secondary mt-3 mb-0">Demo only: details stay in your browser. Connect Flask/Django + MySQL for real accounts.</p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="toast" class="toast text-bg-dark" role="status" aria-live="polite"><div class="toast-body" id="toastMsg"></div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const store = {
+  get(k, d){ try{ return JSON.parse(localStorage.getItem('ss_'+k)) ?? d }catch(e){ return d } },
+  set(k, v){ try{ localStorage.setItem('ss_'+k, JSON.stringify(v)) }catch(e){} }
+};
+const toast = m => { $('#toastMsg').textContent = m; bootstrap.Toast.getOrCreateInstance($('#toast'),{delay:2200}).show(); };
+
+/* ---------- Static content ---------- */
+const TONES = [['Fair','#F6D9C4'],['Light','#E8B994'],['Wheatish','#C98D5F'],['Tan','#A56A3F'],['Deep','#6B4128']];
+$('#tones').innerHTML = TONES.map((t,i)=>`<span><input type="radio" name="tone" id="t${i}" value="${t[0]}" ${i==2?'checked':''}><label for="t${i}" style="background:${t[1]}" title="${t[0]}"><span class="visually-hidden">${t[0]}</span></label></span>`).join('');
+
+const FEATURES = [
+ ['AI outfit recommendations','Full looks with matching accessories, not single products.'],
+ ['Occasion-based styling','College, interviews, parties and weddings each get their own look.'],
+ ['Weather-based suggestions','Fabrics and layers that suit hot, cold or rainy days.'],
+ ['Color matching','Palettes picked to flatter your skin tone.'],
+ ['Fashion trend updates','See what is in style right now, in every result.'],
+ ['Wardrobe management','Keep a list of what you own and style around it.'],
+ ['Wishlist and favorites','Save outfits and pieces to come back to.'],
+ ['Edit profile','Update your details and preferences whenever they change.'],
+ ['Budget-friendly picks','Suggestions that respect what you want to spend.']
+];
+$('#featGrid').innerHTML = FEATURES.map(f=>`<div class="col-sm-6 col-lg-4"><div class="feat"><h3 class="h5">${f[0]}</h3><p class="mb-0">${f[1]}</p></div></div>`).join('');
+
+const STEPS = ['Register or log in.','Share your age, gender, body type, skin tone and preferences.','Edit or update your profile and preferences at any time.','The AI analyzes your details, the occasion and the weather.','Get matching outfits and accessories.','Save favorites and give feedback so suggestions improve.'];
+$('#steps').innerHTML = STEPS.map((s,i)=>`<div class="step"><b>${i+1}</b><span>${s}</span></div>`).join('');
+$('#futureTags').innerHTML = ['AR virtual try-on','Voice assistant','AI fashion chatbot','Wearable device integration','Real-time trend prediction','Sustainable fashion recommendations'].map(t=>`<span class="tag" style="font-size:1rem;padding:.4rem 1rem">${t}</span>`).join('');
+
+/* ---------- Recommendation engine (rule-based demo) ---------- */
+const PALETTE = {
+  Fair:['#2F4A6D','#B0306A','#5E8B7E','#E8C4C4'], Light:['#7A3E5C','#2E6F6A','#C9A24B','#F0E3D0'],
+  Wheatish:['#1F5C4D','#C9A24B','#8A2352','#F4EDE0'], Tan:['#E0B341','#2C7A7B','#D6537A','#F5F1E8'],
+  Deep:['#E8C23F','#D9467A','#3FA7A0','#FFFFFF']
+};
+const LOOKS = {
+ 'College':{Classic:['Plain shirt or kurti','Straight-fit jeans','White sneakers','Canvas backpack'],Trendy:['Oversized graphic tee','Cargo pants','Chunky sneakers','Crossbody bag'],Minimal:['Solid crew-neck tee','Tapered chinos','Clean sneakers','Tote bag'],'Ethnic fusion':['Short cotton kurta','Straight jeans','Kolhapuri flats','Jhola bag']},
+ 'Interview':{Classic:['Crisp collared shirt','Tailored trousers','Leather formal shoes','Slim watch'],Trendy:['Structured blazer','Wide-leg trousers','Loafers','Minimal studs or tie pin'],Minimal:['Fitted button-up','Straight dark trousers','Plain pumps or oxfords','Leather folio'],'Ethnic fusion':['Formal kurta with blazer','Tailored trousers','Mojari or formal shoes','Simple watch']},
+ 'Party':{Classic:['Satin shirt or little black dress','Dark fitted bottoms','Block heels or boots','Statement earrings'],Trendy:['Sequin or metallic top','High-rise trousers','Platform shoes','Mini clutch'],Minimal:['Solid slip dress or shirt','Slim trousers','Strappy sandals','Single bold ring'],'Ethnic fusion':['Embroidered short kurti','Palazzo or dhoti pants','Juttis','Jhumkas']},
+ 'Wedding':{Classic:['Silk saree or sherwani','Matching dupatta or stole','Embellished footwear','Traditional jewelry'],Trendy:['Pastel lehenga or bandhgala','Contrast dupatta','Metallic heels or mojaris','Layered necklace'],Minimal:['Plain silk kurta set','Soft dupatta','Simple flats','Pearl set'],'Ethnic fusion':['Indo-western gown or jacket kurta','Churidar or fitted pants','Embroidered shoes','Maang tikka or brooch']},
+ 'Casual outing':{Classic:['Linen shirt or cotton top','Light chinos','Slip-on shoes','Sunglasses'],Trendy:['Cropped jacket and tee','Baggy jeans','Retro sneakers','Bucket hat'],Minimal:['Plain tee','Relaxed trousers','White sneakers','Small sling bag'],'Ethnic fusion':['Block-print kurta','Denim or palazzo','Sandals','Oxidised jewelry']}
+};
+const WEATHER = {
+ hot:['Choose breathable cotton or linen; skip heavy layers.','Hot day'],
+ mild:['Light fabrics with an optional thin layer.','Pleasant day'],
+ cold:['Add a wool layer, jacket or scarf; closed shoes.','Cold day'],
+ rain:['Quick-dry fabrics, a waterproof layer and non-slip shoes.','Rainy day']
+};
+const BODY = {
+ Pear:'Balance your hips with structured shoulders and darker bottoms.', Apple:'Use V-necks and A-line cuts to define the waist.',
+ Hourglass:'Fitted waistlines and wrap styles highlight your balance.', Rectangle:'Add shape with belts, ruffles and layered tops.',
+ Athletic:'Softer drapes and tailored cuts add contrast to your build.'
+};
+const TRENDS = ['Earthy neutrals are trending','Oversized blazers are in','Pastel co-ords are popular','Wide-leg silhouettes are trending','Sustainable cotton and linen are in demand'];
+const NAMES = ['The Signature','The Fresh Take','The Statement'];
+
+function recommend(p){
+  const base = LOOKS[p.occasion][p.style], cols = PALETTE[p.tone];
+  return [0,1,2].map(i=>{
+    const items = base.slice();
+    if(i==1) items[0] = 'Alternate: ' + items[0].toLowerCase();
+    if(i==2 && p.occasion!=='Wedding') items.push('Layer: ' + (p.weather==='hot'?'light shrug':'structured jacket'));
+    const c = [cols[i%4], cols[(i+1)%4], cols[(i+2)%4]];
+    return {id:[p.occasion,p.style,p.tone,p.weather,i].join('-'), name:NAMES[i], occasion:p.occasion, colors:c, items,
+      tip:BODY[p.body], weather:WEATHER[p.weather][0]};
+  });
+}
+const card = (o,fav)=>`<div class="col-md-6 col-xl-4"><article class="outfit">
+  <div class="outfit-top">${o.colors.map(c=>`<div style="background:${c}"></div>`).join('')}</div>
+  <div class="outfit-body">
+    <div class="d-flex justify-content-between align-items-start"><div><h3 class="h5 mb-0">${o.name}</h3><small class="text-secondary">${o.occasion}</small></div>
+    <button class="heart" data-id="${o.id}" aria-label="${fav?'Remove from favorites':'Save to favorites'}" aria-pressed="${fav}">${fav?'♥':'♡'}</button></div>
+    <ul>${o.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+    <p class="small mb-1"><strong>Fit:</strong> ${o.tip}</p>
+    <p class="small mb-0"><strong>Weather:</strong> ${o.weather}</p>
+  </div></article></div>`;
+
+/* ---------- State ---------- */
+let favs = store.get('favs', []), current = [];
+const isFav = id => favs.some(f=>f.id===id);
+function renderResults(){ $('#outfitGrid').innerHTML = current.map(o=>card(o,isFav(o.id))).join(''); }
+function renderFavs(){
+  $('#favCount').textContent = favs.length;
+  $('#favGrid').innerHTML = favs.length ? favs.map(o=>card(o,true)).join('') : '<p class="text-secondary">No favorites yet. Tap the heart on an outfit to save it here.</p>';
+}
+function getProfile(){
+  return {age:$('#age').value, gender:$('#gender').value, body:$('#body').value, tone:document.querySelector('[name=tone]:checked').value,
+    occasion:$('#occasion').value, weather:$('#weather').value, style:$('#style').value};
+}
+$('#styleForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const p = getProfile(); current = recommend(p);
+  $('#results').hidden = false;
+  $('#resTitle').textContent = `Outfits for your ${p.occasion.toLowerCase()} look`;
+  $('#resSub').textContent = `${p.style} style · ${p.body} body · ${p.tone} skin tone · ${WEATHER[p.weather][1]}`;
+  $('#trend').textContent = 'Trend: ' + TRENDS[Math.floor(Math.random()*TRENDS.length)];
+  renderResults();
+  $('#results').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});
+});
+document.addEventListener('click', e=>{
+  const h = e.target.closest('.heart'); if(!h) return;
+  const id = h.dataset.id;
+  if(isFav(id)){ favs = favs.filter(f=>f.id!==id); toast('Removed from favorites'); }
+  else { const o = current.find(x=>x.id===id); if(o){ favs.push(o); toast('Saved to favorites'); } }
+  store.set('favs', favs); renderResults(); renderFavs();
+});
+
+/* ---------- Profile ---------- */
+$('#saveProfile').onclick = ()=>{ store.set('profile', getProfile()); toast('Profile saved'); };
+(function loadProfile(){
+  const p = store.get('profile'); if(!p) return;
+  ['age','gender','body','occasion','weather','style'].forEach(k=>{ if(p[k]) $('#'+k).value = p[k]; });
+  const r = [...document.querySelectorAll('[name=tone]')].find(x=>x.value===p.tone); if(r) r.checked = true;
+})();
+const pref = store.get('pref', {});
+$('#pName').value = pref.name||''; $('#pBudget').value = pref.budget||'Under ₹1,500'; $('#pFav').value = pref.fav||'';
+$('#profForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  store.set('pref',{name:$('#pName').value, budget:$('#pBudget').value, fav:$('#pFav').value});
+  $('#profMsg').textContent = 'Preferences updated.'; setTimeout(()=>$('#profMsg').textContent='',2500);
+});
+
+/* ---------- Wardrobe & wishlist ---------- */
+function listApp(key, listSel, formSel, inputSel, typeSel){
+  let items = store.get(key, []);
+  const draw = ()=>{
+    $(listSel).innerHTML = items.length ? items.map((it,i)=>`<li class="list-group-item d-flex justify-content-between align-items-center"><span>${it.name}${it.type?` <span class="tag ms-2">${it.type}</span>`:''}</span><button class="btn btn-sm btn-outline-danger" data-i="${i}" aria-label="Remove ${it.name}">Remove</button></li>`).join('') : '<li class="list-group-item text-secondary">Nothing here yet. Add your first item above.</li>';
+  };
+  $(formSel).addEventListener('submit', e=>{
+    e.preventDefault(); const name = $(inputSel).value.trim(); if(!name) return;
+    items.push({name, type: typeSel ? $(typeSel).value : ''}); store.set(key, items); $(inputSel).value=''; draw();
+  });
+  $(listSel).addEventListener('click', e=>{
+    const b = e.target.closest('button[data-i]'); if(!b) return;
+    items.splice(+b.dataset.i,1); store.set(key, items); draw();
+  });
+  draw();
+}
+listApp('wardrobe','#wardList','#wardForm','#wItem','#wType');
+listApp('wishlist','#wishList','#wishForm','#wishItem');
+
+/* ---------- Login (demo) ---------- */
+let mode = 'login';
+document.querySelectorAll('#authMode button').forEach(b=>b.onclick=()=>{
+  mode = b.dataset.mode;
+  document.querySelectorAll('#authMode button').forEach(x=>x.classList.toggle('active', x===b));
+  $('#nameRow').classList.toggle('d-none', mode!=='register');
+  $('#authSubmit').textContent = mode==='register' ? 'Create account' : 'Log in';
+});
+function setUser(u){ $('#authBtn').textContent = u ? 'Log out' : 'Log in'; $('#authBtn').toggleAttribute('data-bs-toggle', !u); if(u) $('#authBtn').removeAttribute('data-bs-target'); else $('#authBtn').setAttribute('data-bs-target','#loginModal'); }
+let user = store.get('user'); setUser(user);
+$('#authBtn').addEventListener('click', ()=>{ if(user){ user=null; store.set('user',null); setUser(null); toast('Logged out'); } });
+$('#loginForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  user = {email:$('#lEmail').value, name:$('#lName').value}; store.set('user', user); setUser(user);
+  bootstrap.Modal.getInstance($('#loginModal')).hide();
+  toast(mode==='register' ? 'Account created' : 'Logged in');
+});
+renderFavs();
+</script>
+</body>
+</html>
